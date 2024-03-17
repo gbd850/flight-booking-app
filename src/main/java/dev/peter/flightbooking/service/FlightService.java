@@ -96,4 +96,15 @@ public class FlightService {
 
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found");
     }
+
+    public Flight editFlight(Integer id, FlightRequestDto flightRequestDto) {
+        Flight flight = flightRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found"));
+
+        flight.updateEntityFromDto(flightRequestDto);
+
+        flightRepository.save(flight);
+
+        return flight;
+    }
 }

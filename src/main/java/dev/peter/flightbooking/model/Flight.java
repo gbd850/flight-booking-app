@@ -1,12 +1,15 @@
 package dev.peter.flightbooking.model;
 
+import dev.peter.flightbooking.dto.FlightRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -37,4 +40,13 @@ public class Flight {
 
     @Column(nullable = false)
     private boolean isAvailable = true;
+
+    public void updateEntityFromDto(FlightRequestDto flightRequestDto) {
+        this.name = Objects.requireNonNullElse(flightRequestDto.name(), this.name);
+        this.startDate = Objects.requireNonNullElse(flightRequestDto.startDate(), this.startDate);
+        this.endDate = Objects.requireNonNullElse(flightRequestDto.endDate(), this.endDate);
+        this.startLocation = Objects.requireNonNullElse(flightRequestDto.startLocation(), this.startLocation);
+        this.endLocation = Objects.requireNonNullElse(flightRequestDto.endLocation(), this.endLocation);
+        this.price = Objects.requireNonNullElse(flightRequestDto.price(), this.price);
+    }
 }
