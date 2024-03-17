@@ -1,5 +1,6 @@
 package dev.peter.flightbooking.service;
 
+import dev.peter.flightbooking.dto.FlightRequestDto;
 import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.repository.FlightRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -65,5 +65,35 @@ public class FlightService {
         }
 
         return flights;
+    }
+
+    public Flight createFlight(FlightRequestDto flightRequestDto) {
+
+        Flight flight = new Flight(
+                null,
+                flightRequestDto.name(),
+                flightRequestDto.price(),
+                flightRequestDto.startDate(),
+                flightRequestDto.endDate(),
+                flightRequestDto.startLocation(),
+                flightRequestDto.endLocation(),
+                flightRequestDto.isAvailable()
+        );
+
+        try {
+            flightRepository.save(flight);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return flight;
+    }
+
+    public void deleteFlight(Integer id) {
+        if (flightRepository.existsById(id)) {
+
+            flightRepository.deleteById(id);
+
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found");
     }
 }
