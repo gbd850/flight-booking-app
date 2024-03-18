@@ -4,6 +4,7 @@ import dev.peter.flightbooking.dto.FlightRequestDto;
 import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.repository.FlightRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +23,7 @@ public class FlightService {
                 .filter(Flight::isAvailable).toList();
     }
 
+    @Cacheable(value = "flightStartLocation")
     public List<Flight> getFLightsByStartLocation(String startLocation, boolean filterUnavailable) {
 
         List<Flight> flights = Collections.unmodifiableList(flightRepository.findByStartLocation(startLocation));
@@ -37,6 +39,7 @@ public class FlightService {
         return flights;
     }
 
+    @Cacheable(value = "flightEndLocation")
     public List<Flight> getFLightsByEndLocation(String endLocation, boolean filterUnavailable) {
 
         List<Flight> flights = Collections.unmodifiableList(flightRepository.findByEndLocation(endLocation));
@@ -52,6 +55,7 @@ public class FlightService {
         return flights;
     }
 
+    @Cacheable(value = "flightTimeFrame")
     public List<Flight> getFLightsByTimeFrame(String startDate, String endDate, boolean filterUnavailable) {
 
         List<Flight> flights = Collections.unmodifiableList(flightRepository.findByStartDateAndEndDate(startDate, endDate));
