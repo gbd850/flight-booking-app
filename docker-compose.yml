@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  cache:
+    image: redis:alpine3.19
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server
+    volumes:
+      - cache:/data
+volumes:
+  cache:
+    driver: local

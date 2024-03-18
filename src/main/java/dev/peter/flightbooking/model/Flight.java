@@ -1,13 +1,14 @@
 package dev.peter.flightbooking.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dev.peter.flightbooking.dto.FlightRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.util.ObjectUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Flight {
+public class Flight implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +30,10 @@ public class Flight {
     private Double price;
 
     @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date startDate;
 
+    @Temporal(TemporalType.DATE)
     private Date endDate;
 
     @Column(nullable = false)
