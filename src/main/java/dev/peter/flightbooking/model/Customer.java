@@ -1,12 +1,13 @@
 package dev.peter.flightbooking.model;
 
-
+import dev.peter.flightbooking.dto.CustomerRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -27,7 +28,7 @@ public class Customer {
     private String password;
 
     @Enumerated(value = EnumType.STRING)
-    private Role role = Role.USER;
+    private Role role;
 
     @ManyToMany
     @JoinTable(
@@ -36,5 +37,15 @@ public class Customer {
             inverseJoinColumns = @JoinColumn(name = "customer_id")
     )
     private Set<Flight> bookedFlights;
+
+    public void updateEntityFromDto(CustomerRequestDto customerRequestDto) {
+        this.username = Objects.requireNonNullElse(customerRequestDto.username(), this.username);
+        this.password = Objects.requireNonNullElse(customerRequestDto.password(), this.password);
+        try {
+            this.role = Objects.requireNonNullElse(Role.valueOf(customerRequestDto.role()), this.role);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
