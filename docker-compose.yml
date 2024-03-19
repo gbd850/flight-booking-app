@@ -5,7 +5,7 @@ services:
     restart: always
     ports:
       - '6379:6379'
-    command: redis-server
+    command: ["redis-server", "--appendonly", "no", "--maxmemory", "500mb", "--maxmemory-policy", "allkeys-lru"]
     volumes:
       - cache:/data
 volumes:
