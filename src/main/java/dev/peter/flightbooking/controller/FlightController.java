@@ -1,6 +1,7 @@
 package dev.peter.flightbooking.controller;
 
 import dev.peter.flightbooking.dto.FlightRequestDto;
+import dev.peter.flightbooking.dto.FlightResponseDto;
 import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.service.FlightService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class FlightController {
             params = {
             "startLocation"
     })
-    public ResponseEntity<List<Flight>> getFLightsByStartLocation(
+    public ResponseEntity<List<FlightResponseDto>> getFLightsByStartLocation(
             @RequestParam String startLocation,
             @RequestParam(required = false, defaultValue = "false") boolean filterUnavailable
     ) {
@@ -32,7 +33,7 @@ public class FlightController {
             params = {
             "endLocation"
     })
-    public ResponseEntity<List<Flight>> getFLightsByEndLocation(
+    public ResponseEntity<List<FlightResponseDto>> getFLightsByEndLocation(
             @RequestParam String endLocation,
             @RequestParam(required = false, defaultValue = "false") boolean filterUnavailable
     ) {
@@ -44,7 +45,7 @@ public class FlightController {
             "startDate",
             "endDate"
     })
-    public ResponseEntity<List<Flight>> getFLightsByTimeFrame(
+    public ResponseEntity<List<FlightResponseDto>> getFLightsByTimeFrame(
             @RequestParam String startDate,
             @RequestParam String endDate,
             @RequestParam(required = false, defaultValue = "false") boolean filterUnavailable
@@ -53,7 +54,7 @@ public class FlightController {
     }
 
     @PostMapping
-    public ResponseEntity<Flight> createFlight(@RequestBody FlightRequestDto flightRequestDto) {
+    public ResponseEntity<FlightResponseDto> createFlight(@RequestBody FlightRequestDto flightRequestDto) {
         return new ResponseEntity<>(flightService.createFlight(flightRequestDto), HttpStatus.CREATED);
     }
 
