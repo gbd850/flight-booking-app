@@ -6,6 +6,16 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+      hbm2ddl:
+        auto: update
+    properties:
+      jakarta:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            scripts:
+              action: update
+              create-target: update.sql
   application:
     name: flightbooking
 
