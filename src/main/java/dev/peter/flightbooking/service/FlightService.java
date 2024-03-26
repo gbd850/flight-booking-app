@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,9 +31,18 @@ public class FlightService {
                 .filter(Flight::isAvailable).toList();
     }
 
-    @Cacheable(value = "flightStartLocation", key = "#startLocation")
+//    @Cacheable(value = "flightStartLocation", key = "#startLocation")
     private List<Flight> getAllFLightsByStartLocation(String startLocation) {
-        List<Flight> flights = Collections.unmodifiableList(flightRepository.findByStartLocation(startLocation));
+
+        List<Flight> flights;
+        try {
+            flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightStartLocation")).get("startLocation", List.class);
+            Objects.requireNonNull(flights);
+        }
+        catch (NullPointerException e) {
+            flights = Collections.unmodifiableList(flightRepository.findByStartLocation(startLocation));
+            cacheManager.getCache("flightStartLocation").putIfAbsent("startLocation", flights);
+        }
 
         if (flights.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find flights matching start location");
@@ -61,10 +71,18 @@ public class FlightService {
                 )).collect(Collectors.toList());
     }
 
-    @Cacheable(value = "flightEndLocation", key = "#endLocation")
+//    @Cacheable(value = "flightEndLocation", key = "#endLocation")
     private List<Flight> getAllFLightsByEndLocation(String endLocation) {
 
-        List<Flight> flights = Collections.unmodifiableList(flightRepository.findByEndLocation(endLocation));
+        List<Flight> flights;
+        try {
+            flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightEndLocation")).get("endLocation", List.class);
+            Objects.requireNonNull(flights);
+        }
+        catch (NullPointerException e) {
+            flights = Collections.unmodifiableList(flightRepository.findByEndLocation(endLocation));
+            cacheManager.getCache("flightEndLocation").putIfAbsent("endLocation", flights);
+        }
 
         if (flights.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find flights matching end location");
@@ -93,10 +111,18 @@ public class FlightService {
                 )).collect(Collectors.toList());
     }
 
-
+//    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
     private List<Flight> getAllFLightsByTimeFrame(String startDate, String endDate) {
 
-        List<Flight> flights = Collections.unmodifiableList(flightRepository.findByStartDateAndEndDate(startDate, endDate));
+        List<Flight> flights;
+        try {
+            flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightTimeFrame")).get(List.of(startDate, endDate), List.class);
+            Objects.requireNonNull(flights);
+        }
+        catch (NullPointerException e) {
+            flights = Collections.unmodifiableList(flightRepository.findByStartDateAndEndDate(startDate, endDate));
+            cacheManager.getCache("flightTimeFrame").putIfAbsent(List.of(startDate, endDate), flights);
+        }
 
         if (flights.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find flights matching time frame");
@@ -104,7 +130,7 @@ public class FlightService {
         return flights;
     }
 
-    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
+//    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
     public List<FlightResponseDto> getFLightsByTimeFrame(String startDate, String endDate, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByTimeFrame(startDate, endDate);
