@@ -36,12 +36,12 @@ public class FlightService {
 
         List<Flight> flights;
         try {
-            flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightStartLocation")).get("startLocation", List.class);
+            flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightStartLocation")).get(startLocation, List.class);
             Objects.requireNonNull(flights);
         }
         catch (NullPointerException e) {
             flights = Collections.unmodifiableList(flightRepository.findByStartLocation(startLocation));
-            cacheManager.getCache("flightStartLocation").putIfAbsent("startLocation", flights);
+            cacheManager.getCache("flightStartLocation").putIfAbsent(startLocation, flights);
         }
 
         if (flights.isEmpty()) {
@@ -76,12 +76,12 @@ public class FlightService {
 
         List<Flight> flights;
         try {
-            flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightEndLocation")).get("endLocation", List.class);
+            flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightEndLocation")).get(endLocation, List.class);
             Objects.requireNonNull(flights);
         }
         catch (NullPointerException e) {
             flights = Collections.unmodifiableList(flightRepository.findByEndLocation(endLocation));
-            cacheManager.getCache("flightEndLocation").putIfAbsent("endLocation", flights);
+            cacheManager.getCache("flightEndLocation").putIfAbsent(endLocation, flights);
         }
 
         if (flights.isEmpty()) {
