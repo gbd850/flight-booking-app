@@ -1,5 +1,18 @@
 version: '3.8'
 services:
+  db:
+    image: mysql:8.3.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'flight-booking-app'
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - db:/var/lib/mysql
+
   cache:
     image: redis:alpine3.19
     restart: always
@@ -9,5 +22,7 @@ services:
     volumes:
       - cache:/data
 volumes:
+  db:
+    driver: local
   cache:
     driver: local
