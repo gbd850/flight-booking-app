@@ -1,6 +1,7 @@
 package dev.peter.flightbooking.service;
 
 import dev.peter.flightbooking.dto.FlightRequestDto;
+import dev.peter.flightbooking.dto.FlightResponseDto;
 import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.repository.FlightRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class FlightService {
         return flights;
     }
 
-    public List<Flight> getFLightsByStartLocation(String startLocation, boolean filterUnavailable) {
+    public List<FlightResponseDto> getFLightsByStartLocation(String startLocation, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByStartLocation(startLocation);
 
@@ -57,7 +58,17 @@ public class FlightService {
             flights = filterAvailableFlights(flights);
         }
 
-        return flights;
+        return flights.stream()
+                .map(flight -> new FlightResponseDto(
+                        flight.getId(),
+                        flight.getName(),
+                        flight.getPrice(),
+                        flight.getStartDate(),
+                        flight.getEndDate(),
+                        flight.getStartLocation(),
+                        flight.getEndLocation(),
+                        flight.isAvailable()
+                )).collect(Collectors.toList());
     }
 
 //    @Cacheable(value = "flightEndLocation", key = "#endLocation")
@@ -79,7 +90,7 @@ public class FlightService {
         return flights;
     }
 
-    public List<Flight> getFLightsByEndLocation(String endLocation, boolean filterUnavailable) {
+    public List<FlightResponseDto> getFLightsByEndLocation(String endLocation, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByEndLocation(endLocation);
 
@@ -87,7 +98,17 @@ public class FlightService {
             flights = filterAvailableFlights(flights);
         }
 
-        return flights;
+        return flights.stream()
+                .map(flight -> new FlightResponseDto(
+                        flight.getId(),
+                        flight.getName(),
+                        flight.getPrice(),
+                        flight.getStartDate(),
+                        flight.getEndDate(),
+                        flight.getStartLocation(),
+                        flight.getEndLocation(),
+                        flight.isAvailable()
+                )).collect(Collectors.toList());
     }
 
 //    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
@@ -110,7 +131,7 @@ public class FlightService {
     }
 
 //    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
-    public List<Flight> getFLightsByTimeFrame(String startDate, String endDate, boolean filterUnavailable) {
+    public List<FlightResponseDto> getFLightsByTimeFrame(String startDate, String endDate, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByTimeFrame(startDate, endDate);
 
@@ -118,7 +139,17 @@ public class FlightService {
             flights = filterAvailableFlights(flights);
         }
 
-        return flights;
+        return flights.stream()
+                .map(flight -> new FlightResponseDto(
+                        flight.getId(),
+                        flight.getName(),
+                        flight.getPrice(),
+                        flight.getStartDate(),
+                        flight.getEndDate(),
+                        flight.getStartLocation(),
+                        flight.getEndLocation(),
+                        flight.isAvailable()
+                )).collect(Collectors.toList());
     }
 
     @Caching(evict = {
@@ -130,7 +161,7 @@ public class FlightService {
                     "}")
     }
     )
-    public Flight createFlight(FlightRequestDto flightRequestDto) {
+    public FlightResponseDto createFlight(FlightRequestDto flightRequestDto) {
 
         Flight flight = new Flight(
                 null,
@@ -149,7 +180,16 @@ public class FlightService {
             e.printStackTrace();
         }
 
-        return flight;
+        return new FlightResponseDto(
+                flight.getId(),
+                flight.getName(),
+                flight.getPrice(),
+                flight.getStartDate(),
+                flight.getEndDate(),
+                flight.getStartLocation(),
+                flight.getEndLocation(),
+                flight.isAvailable()
+        );
     }
 
     public void deleteFlight(Integer id) {
@@ -177,7 +217,7 @@ public class FlightService {
                     "}")
     }
     )
-    public Flight editFlight(Integer id, FlightRequestDto flightRequestDto) {
+    public FlightResponseDto editFlight(Integer id, FlightRequestDto flightRequestDto) {
         Flight flight = flightRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found"));
 
@@ -185,6 +225,15 @@ public class FlightService {
 
         flightRepository.save(flight);
 
-        return flight;
+        return new FlightResponseDto(
+                flight.getId(),
+                flight.getName(),
+                flight.getPrice(),
+                flight.getStartDate(),
+                flight.getEndDate(),
+                flight.getStartLocation(),
+                flight.getEndLocation(),
+                flight.isAvailable()
+        );
     }
 }

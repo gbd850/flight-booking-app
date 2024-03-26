@@ -1,6 +1,7 @@
 package dev.peter.flightbooking.service;
 
 import dev.peter.flightbooking.dto.CustomerRequestDto;
+import dev.peter.flightbooking.dto.CustomerResponseDto;
 import dev.peter.flightbooking.model.Customer;
 import dev.peter.flightbooking.model.Role;
 import dev.peter.flightbooking.repository.CustomerRepository;
@@ -20,12 +21,19 @@ public class CustomerService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public Customer getCustomerById(Integer id) {
-        return customerRepository.findById(id)
+    public CustomerResponseDto getCustomerById(Integer id) {
+        Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        return new CustomerResponseDto(
+                customer.getId(),
+                customer.getUsername(),
+                customer.getPassword(),
+                customer.getRole().name(),
+                customer.getBookedFlights()
+        );
     }
 
-    public Customer createCustomer(CustomerRequestDto customerRequestDto) {
+    public CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto) {
 
         Role role;
         try {
@@ -45,10 +53,17 @@ public class CustomerService {
                 new HashSet<>()
         );
         customerRepository.save(customer);
-        return customer;
+
+        return new CustomerResponseDto(
+                customer.getId(),
+                customer.getUsername(),
+                customer.getPassword(),
+                customer.getRole().name(),
+                customer.getBookedFlights()
+        );
     }
 
-    public Customer editCustomer(Integer id, CustomerRequestDto customerRequestDto) {
+    public CustomerResponseDto editCustomer(Integer id, CustomerRequestDto customerRequestDto) {
 
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
@@ -57,7 +72,13 @@ public class CustomerService {
 
         customerRepository.save(customer);
 
-        return customer;
+        return new CustomerResponseDto(
+                customer.getId(),
+                customer.getUsername(),
+                customer.getPassword(),
+                customer.getRole().name(),
+                customer.getBookedFlights()
+        );
     }
 
     public void deleteCustomer(Integer id) {
