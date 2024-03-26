@@ -5,6 +5,8 @@ import dev.peter.flightbooking.dto.FlightResponseDto;
 import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.service.FlightService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ public class FlightController {
 
     private final FlightService flightService;
 
+    private static final Logger log = LoggerFactory.getLogger(FlightController.class);
+
     @GetMapping(
             params = {
             "startLocation"
@@ -26,6 +30,7 @@ public class FlightController {
             @RequestParam String startLocation,
             @RequestParam(required = false, defaultValue = "false") boolean filterUnavailable
     ) {
+//        log.info(Thread.currentThread().toString());
         return new ResponseEntity<>(flightService.getFLightsByStartLocation(startLocation, filterUnavailable), HttpStatus.OK);
     }
 
