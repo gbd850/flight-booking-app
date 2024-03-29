@@ -7,7 +7,6 @@ import dev.peter.flightbooking.repository.FlightRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,15 +30,14 @@ public class FlightService {
                 .filter(Flight::isAvailable).toList();
     }
 
-//    @Cacheable(value = "flightStartLocation", key = "#startLocation")
+    //    @Cacheable(value = "flightStartLocation", key = "#startLocation")
     private List<Flight> getAllFLightsByStartLocation(String startLocation) {
 
         List<Flight> flights;
         try {
             flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightStartLocation")).get(startLocation, List.class);
             Objects.requireNonNull(flights);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             flights = Collections.unmodifiableList(flightRepository.findByStartLocation(startLocation));
             cacheManager.getCache("flightStartLocation").putIfAbsent(startLocation, flights);
         }
@@ -71,15 +69,14 @@ public class FlightService {
                 )).collect(Collectors.toList());
     }
 
-//    @Cacheable(value = "flightEndLocation", key = "#endLocation")
+    //    @Cacheable(value = "flightEndLocation", key = "#endLocation")
     private List<Flight> getAllFLightsByEndLocation(String endLocation) {
 
         List<Flight> flights;
         try {
             flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightEndLocation")).get(endLocation, List.class);
             Objects.requireNonNull(flights);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             flights = Collections.unmodifiableList(flightRepository.findByEndLocation(endLocation));
             cacheManager.getCache("flightEndLocation").putIfAbsent(endLocation, flights);
         }
@@ -111,7 +108,7 @@ public class FlightService {
                 )).collect(Collectors.toList());
     }
 
-//    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
+    //    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
     private List<Flight> getAllFLightsByTimeFrame(String startDate, String endDate) {
 
         List<Flight> flights;
@@ -130,7 +127,7 @@ public class FlightService {
         return flights;
     }
 
-//    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
+    //    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
     public List<FlightResponseDto> getFLightsByTimeFrame(String startDate, String endDate, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByTimeFrame(startDate, endDate);
@@ -178,6 +175,7 @@ public class FlightService {
             flightRepository.save(flight);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong while creating flight");
         }
 
         return new FlightResponseDto(
