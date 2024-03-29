@@ -10,6 +10,8 @@ import lombok.Setter;
 import java.util.Objects;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -39,13 +41,19 @@ public class Customer {
     private Set<Flight> bookedFlights;
 
     public void updateEntityFromDto(CustomerRequestDto customerRequestDto) {
+        if (isNull(customerRequestDto)) {
+            throw new NullPointerException("Invalid customer dto");
+        }
         this.username = Objects.requireNonNullElse(customerRequestDto.username(), this.username);
         this.password = Objects.requireNonNullElse(customerRequestDto.password(), this.password);
+        Role updatedRole;
         try {
-            this.role = Objects.requireNonNullElse(Role.valueOf(customerRequestDto.role()), this.role);
-        } catch (IllegalArgumentException e) {
+            updatedRole = Role.valueOf(customerRequestDto.role());
+        } catch (IllegalArgumentException | NullPointerException e) {
             e.printStackTrace();
+            updatedRole = this.role;
         }
+        this.role = Objects.requireNonNullElse(updatedRole, this.role);
     }
 
 }
