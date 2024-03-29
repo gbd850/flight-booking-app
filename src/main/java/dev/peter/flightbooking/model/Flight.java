@@ -11,6 +11,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -44,6 +46,9 @@ public class Flight implements Serializable {
     private boolean isAvailable = true;
 
     public void updateEntityFromDto(FlightRequestDto flightRequestDto) {
+        if (isNull(flightRequestDto)) {
+            throw new NullPointerException("Invalid flight dto");
+        }
         this.name = Objects.requireNonNullElse(flightRequestDto.name(), this.name);
         this.startDate = Objects.requireNonNullElse(flightRequestDto.startDate(), this.startDate);
         this.endDate = Objects.requireNonNullElse(flightRequestDto.endDate(), this.endDate);
