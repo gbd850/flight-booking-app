@@ -5,8 +5,10 @@ import dev.peter.flightbooking.dto.CustomerResponseDto;
 import dev.peter.flightbooking.model.Customer;
 import dev.peter.flightbooking.model.Role;
 import dev.peter.flightbooking.repository.CustomerRepository;
+import io.netty.util.internal.ThrowableUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,7 +25,7 @@ public class CustomerService {
 
     public CustomerResponseDto getCustomerById(Integer id) {
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
         return new CustomerResponseDto(
                 customer.getId(),
                 customer.getUsername(),
@@ -66,7 +68,7 @@ public class CustomerService {
     public CustomerResponseDto editCustomer(Integer id, CustomerRequestDto customerRequestDto) {
 
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
 
         customer.updateEntityFromDto(customerRequestDto);
 
@@ -86,7 +88,7 @@ public class CustomerService {
 
             customerRepository.deleteById(id);
 
-        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found");
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist"));
     }
 
 }

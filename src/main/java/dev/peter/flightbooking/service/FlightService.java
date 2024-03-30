@@ -43,7 +43,7 @@ public class FlightService {
         }
 
         if (flights.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find flights matching start location");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flights not found", new Throwable("Could not find flights matching " + startLocation + " as start location"));
         }
         return flights;
     }
@@ -82,7 +82,7 @@ public class FlightService {
         }
 
         if (flights.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find flights matching end location");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flights not found", new Throwable("Could not find flights matching " + endLocation + " as end location"));
         }
         return flights;
     }
@@ -122,7 +122,7 @@ public class FlightService {
         }
 
         if (flights.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find flights matching time frame");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flights not found", new Throwable("Could not find flights matching time frame " + startDate + " - " + endDate));
         }
         return flights;
     }
@@ -175,7 +175,7 @@ public class FlightService {
             flightRepository.save(flight);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong while creating flight");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong",  new Throwable("Something went wrong while creating flight"));
         }
 
         return new FlightResponseDto(
@@ -193,7 +193,7 @@ public class FlightService {
     public void deleteFlight(Integer id) {
 
         Flight flight = flightRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found", new Throwable("Flight with id " + id + " does not exist")));
 
         cacheManager.getCache("flightStartLocation").evictIfPresent(flight.getStartLocation());
         cacheManager.getCache("flightEndLocation").evictIfPresent(flight.getEndLocation());
@@ -217,7 +217,7 @@ public class FlightService {
     )
     public FlightResponseDto editFlight(Integer id, FlightRequestDto flightRequestDto) {
         Flight flight = flightRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found", new Throwable("Flight with id " + id + " does not exist")));
 
         flight.updateEntityFromDto(flightRequestDto);
 
