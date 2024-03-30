@@ -114,7 +114,7 @@ class FlightServiceTest {
         // then
         assertThatThrownBy(() -> flightService.getFLightsByStartLocation(anyString(), false))
                 .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Could not find flights matching start location")
+                .hasMessageContaining("Flights not found")
                 .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND);
     }
 
@@ -187,7 +187,7 @@ class FlightServiceTest {
         // then
         assertThatThrownBy(() -> flightService.getFLightsByEndLocation(anyString(), false))
                 .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Could not find flights matching end location")
+                .hasMessageContaining("Flights not found")
                 .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND);
     }
 
@@ -267,7 +267,7 @@ class FlightServiceTest {
         // then
         assertThatThrownBy(() -> flightService.getFLightsByTimeFrame(startDate, endDate, false))
                 .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Could not find flights matching time frame")
+                .hasMessageContaining("Flights not found")
                 .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND);
     }
 
@@ -282,7 +282,7 @@ class FlightServiceTest {
         // then
         assertThatThrownBy(() -> flightService.getFLightsByTimeFrame(startDate, endDate, false))
                 .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Could not find flights matching time frame")
+                .hasMessageContaining("Flights not found")
                 .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND);
     }
 
@@ -297,7 +297,7 @@ class FlightServiceTest {
         // then
         assertThatThrownBy(() -> flightService.getFLightsByTimeFrame(startDate, endDate, false))
                 .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("Could not find flights matching time frame")
+                .hasMessageContaining("Flights not found")
                 .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND);
     }
 
