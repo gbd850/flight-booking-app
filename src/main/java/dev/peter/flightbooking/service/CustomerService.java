@@ -15,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 
+import static java.util.Objects.isNull;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
@@ -66,6 +68,10 @@ public class CustomerService {
     }
 
     public CustomerResponseDto editCustomer(Integer id, CustomerRequestDto customerRequestDto) {
+
+        if (isNull(customerRequestDto)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad Request", new Throwable("Customer object body cannot be empty"));
+        }
 
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
