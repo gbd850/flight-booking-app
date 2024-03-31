@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
@@ -37,6 +38,7 @@ public class CustomerService {
         );
     }
 
+    @Transactional
     public CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto) {
 
         Role role;
@@ -67,6 +69,7 @@ public class CustomerService {
         );
     }
 
+    @Transactional
     public CustomerResponseDto editCustomer(Integer id, CustomerRequestDto customerRequestDto) {
 
         if (isNull(customerRequestDto)) {
@@ -89,6 +92,7 @@ public class CustomerService {
         );
     }
 
+    @Transactional
     public void deleteCustomer(Integer id) {
         if (customerRepository.existsById(id)) {
 

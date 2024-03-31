@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-@Transactional
 public interface FlightRepository extends JpaRepository<Flight, Integer> {
     @Query(value = "SELECT * FROM flight WHERE CAST(start_date AS DATE) = CAST(?1 AS DATE) AND CAST(end_date AS DATE) = CAST(?2 AS DATE);", nativeQuery = true)
     List<Flight> findByStartDateAndEndDate(String startDate, String endDate);
