@@ -11,9 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
+
+import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class CustomerService {
         );
     }
 
+    @Transactional
     public CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto) {
 
         Role role;
@@ -65,7 +69,12 @@ public class CustomerService {
         );
     }
 
+    @Transactional
     public CustomerResponseDto editCustomer(Integer id, CustomerRequestDto customerRequestDto) {
+
+        if (isNull(customerRequestDto)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad Request", new Throwable("Customer object body cannot be empty"));
+        }
 
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
@@ -83,6 +92,7 @@ public class CustomerService {
         );
     }
 
+    @Transactional
     public void deleteCustomer(Integer id) {
         if (customerRepository.existsById(id)) {
 

@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
@@ -158,6 +159,7 @@ public class FlightService {
                     "}")
     }
     )
+    @Transactional
     public FlightResponseDto createFlight(FlightRequestDto flightRequestDto) {
 
         Flight flight = new Flight(
@@ -190,6 +192,7 @@ public class FlightService {
         );
     }
 
+    @Transactional
     public void deleteFlight(Integer id) {
 
         Flight flight = flightRepository.findById(id)
@@ -215,6 +218,7 @@ public class FlightService {
                     "}")
     }
     )
+    @Transactional
     public FlightResponseDto editFlight(Integer id, FlightRequestDto flightRequestDto) {
         Flight flight = flightRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found", new Throwable("Flight with id " + id + " does not exist")));
