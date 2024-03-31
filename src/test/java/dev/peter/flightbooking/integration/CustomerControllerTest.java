@@ -31,7 +31,7 @@ class CustomerControllerTest {
 
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>(
             "mysql:8.3.0"
-    );
+    ).withReuse(true);
     private final ObjectMapper objectMapper = new ObjectMapper();
     @LocalServerPort
     private Integer port;
@@ -58,7 +58,7 @@ class CustomerControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
-        customerRepository.deleteAll();
+        customerRepository.deleteAllInBatch();
     }
 
     @Test
