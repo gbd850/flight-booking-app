@@ -9,6 +9,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -49,6 +50,7 @@ public class FlightService {
         return flights;
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public List<FlightResponseDto> getFLightsByStartLocation(String startLocation, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByStartLocation(startLocation);
@@ -88,6 +90,7 @@ public class FlightService {
         return flights;
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public List<FlightResponseDto> getFLightsByEndLocation(String endLocation, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByEndLocation(endLocation);
@@ -129,6 +132,7 @@ public class FlightService {
     }
 
     //    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
+    @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public List<FlightResponseDto> getFLightsByTimeFrame(String startDate, String endDate, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByTimeFrame(startDate, endDate);
@@ -160,6 +164,7 @@ public class FlightService {
     }
     )
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public FlightResponseDto createFlight(FlightRequestDto flightRequestDto) {
 
         Flight flight = new Flight(
@@ -193,6 +198,7 @@ public class FlightService {
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public void deleteFlight(Integer id) {
 
         Flight flight = flightRepository.findById(id)
@@ -219,6 +225,7 @@ public class FlightService {
     }
     )
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public FlightResponseDto editFlight(Integer id, FlightRequestDto flightRequestDto) {
         Flight flight = flightRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found", new Throwable("Flight with id " + id + " does not exist")));

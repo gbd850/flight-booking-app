@@ -9,6 +9,7 @@ import io.netty.util.internal.ThrowableUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class CustomerService {
 
     private final PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public CustomerResponseDto getCustomerById(Integer id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
@@ -39,6 +41,7 @@ public class CustomerService {
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto) {
 
         Role role;
@@ -70,6 +73,7 @@ public class CustomerService {
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public CustomerResponseDto editCustomer(Integer id, CustomerRequestDto customerRequestDto) {
 
         if (isNull(customerRequestDto)) {
@@ -93,6 +97,7 @@ public class CustomerService {
     }
 
     @Transactional
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public void deleteCustomer(Integer id) {
         if (customerRepository.existsById(id)) {
 
