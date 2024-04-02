@@ -5,10 +5,9 @@ import dev.peter.flightbooking.dto.CustomerResponseDto;
 import dev.peter.flightbooking.model.Customer;
 import dev.peter.flightbooking.model.Role;
 import dev.peter.flightbooking.repository.CustomerRepository;
-import io.netty.util.internal.ThrowableUtil;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
+@RateLimiter(name = "simpleRateLimit")
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
@@ -103,7 +103,8 @@ public class CustomerService {
 
             customerRepository.deleteById(id);
 
-        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist"));
+        } else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist"));
     }
 
 }
