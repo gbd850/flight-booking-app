@@ -14,7 +14,7 @@ class CustomerTest {
     @Test
     void givenValidCustomerDto_whenUpdateEntityFromDto_thenUpdateEntity() {
         // given
-        CustomerRequestDto customerRequestDto = new CustomerRequestDto(null, "newUsername", "newPassword", Role.USER.name());
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto("newUsername", "newPassword", Role.USER.name());
 
         Customer customer = new Customer(null, "username", "password", Role.USER, new HashSet<>());
         // when
@@ -30,7 +30,7 @@ class CustomerTest {
     @Test
     void givenValidPartialCustomerDto_whenUpdateEntityFromDto_thenUpdateEntity() {
         // given
-        CustomerRequestDto customerRequestDto = new CustomerRequestDto(null, "newUsername", null, Role.USER.name());
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto("newUsername", null, Role.USER.name());
 
         String oldUsername = "username";
         String oldPassword = "password";
@@ -49,7 +49,7 @@ class CustomerTest {
     @Test
     void givenPartialCustomerDtoWithInvalidRole_whenUpdateEntityFromDto_thenUpdateEntityWithOldRole() {
         // given
-        CustomerRequestDto customerRequestDto = new CustomerRequestDto(null, "newUsername", null, null);
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto("newUsername", null, null);
 
         String oldUsername = "username";
         String oldPassword = "password";
