@@ -4,6 +4,7 @@ import dev.peter.flightbooking.dto.FlightRequestDto;
 import dev.peter.flightbooking.dto.FlightResponseDto;
 import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.repository.FlightRepository;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@RateLimiter(name = "simpleRateLimit")
 public class FlightService {
 
     private final FlightRepository flightRepository;
@@ -119,8 +121,7 @@ public class FlightService {
         try {
             flights = (List<Flight>) Objects.requireNonNull(cacheManager.getCache("flightTimeFrame")).get(List.of(startDate, endDate), List.class);
             Objects.requireNonNull(flights);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             flights = Collections.unmodifiableList(flightRepository.findByStartDateAndEndDate(startDate, endDate));
             cacheManager.getCache("flightTimeFrame").putIfAbsent(List.of(startDate, endDate), flights);
         }
@@ -182,7 +183,7 @@ public class FlightService {
             flightRepository.save(flight);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong",  new Throwable("Something went wrong while creating flight"));
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong", new Throwable("Something went wrong while creating flight"));
         }
 
         return new FlightResponseDto(
