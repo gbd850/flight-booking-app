@@ -79,7 +79,7 @@ class CustomerServiceTest {
     @Test
     void givenCustomerDto_whenCreateCustomer_thenReturnCustomerDto() {
         // given
-        CustomerRequestDto customerRequest = new CustomerRequestDto(null, "username1", "12345678", Role.USER.name());
+        CustomerRequestDto customerRequest = new CustomerRequestDto("username1", "12345678", Role.USER.name());
         // when
         customerService.createCustomer(customerRequest);
         // then
@@ -101,7 +101,7 @@ class CustomerServiceTest {
     void givenCustomerDtoWithInvalidRole_whenCreateCustomer_thenReturnCustomerDtoWithDefaultRole() {
         // given
         String invalidRoleName = "";
-        CustomerRequestDto customerRequest = new CustomerRequestDto(null, "username1", "12345678", invalidRoleName);
+        CustomerRequestDto customerRequest = new CustomerRequestDto("username1", "12345678", invalidRoleName);
         // when
         customerService.createCustomer(customerRequest);
         // then
@@ -122,7 +122,7 @@ class CustomerServiceTest {
     @Test
     void givenValidIdAndCustomerDto_whenEditCustomer_thenReturnUpdatedCustomerDto() {
         // given
-        CustomerRequestDto customerRequest = new CustomerRequestDto(null, "username1", "12345678", Role.USER.name());
+        CustomerRequestDto customerRequest = new CustomerRequestDto("username1", "12345678", Role.USER.name());
 
         Integer id = 1;
         Customer customerToEdit = new Customer(id, "username1", passwordEncoder.encode("12345678"), Role.USER, new HashSet<>());
@@ -145,7 +145,7 @@ class CustomerServiceTest {
     @Test
     void givenInvalidIdAndCustomerDto_whenEditCustomer_thenThrowException() {
         // given
-        CustomerRequestDto customerRequest = new CustomerRequestDto(null, "username1", "12345678", Role.USER.name());
+        CustomerRequestDto customerRequest = new CustomerRequestDto("username1", "12345678", Role.USER.name());
 
         given(customerRepository.findById(anyInt())).willReturn(Optional.empty());
         // when

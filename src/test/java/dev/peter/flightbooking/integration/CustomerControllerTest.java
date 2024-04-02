@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
@@ -27,6 +28,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(value = "test")
 class CustomerControllerTest {
 
     static MySQLContainer<?> mySQLContainer = new MySQLContainer<>(
@@ -108,7 +110,7 @@ class CustomerControllerTest {
     @Test
     void givenCustomer_whenCreateCustomer_thenStatus201() {
         // given
-        CustomerRequestDto customerRequestDto = new CustomerRequestDto(null, "username", "password", Role.USER.name());
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto("username", "password", Role.USER.name());
 
         // when
         given()
@@ -145,7 +147,7 @@ class CustomerControllerTest {
         Customer customer = new Customer(null, "oldUsername", "oldPassword", Role.USER, new HashSet<>());
         Integer id = customerRepository.save(customer).getId();
 
-        CustomerRequestDto customerRequestDto = new CustomerRequestDto(null, "username", "password", null);
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto("username", "password", null);
 
         // when
         given()
@@ -168,7 +170,7 @@ class CustomerControllerTest {
         // given
         int id = 1;
 
-        CustomerRequestDto customerRequestDto = new CustomerRequestDto(null, "username", "password", null);
+        CustomerRequestDto customerRequestDto = new CustomerRequestDto("username", "password", null);
 
         // when
         given()
