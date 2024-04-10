@@ -1,14 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { Flight } from './model/flight';
+import { FlightService } from './service/flight.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, HttpClientModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'frontend';
+  flights: Flight[] = [];
+
+  constructor(private flightService: FlightService) {}
+
+  ngOnInit(): void {
+    this.flightService.getFlightsByStartLocation('City1').subscribe({
+      next: (response: Flight[]) => (this.flights = response),
+      error: (error: HttpErrorResponse) => alert(error.message),
+    });
+  }
 }
