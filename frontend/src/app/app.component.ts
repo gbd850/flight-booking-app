@@ -4,11 +4,13 @@ import { RouterOutlet } from '@angular/router';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Flight } from './model/flight';
 import { FlightService } from './service/flight.service';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HttpClientModule],
+  imports: [CommonModule, RouterOutlet, HttpClientModule, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
