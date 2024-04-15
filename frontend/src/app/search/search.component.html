@@ -1,0 +1,15 @@
+<div class="h-full container mx-auto flex">
+    <div>
+        <p>Flights List</p>
+    </div>
+    <div>
+        @if (failed) {
+            <p>Failed data loading</p>
+        }
+        @else {
+            @for (flight of flights; track $index) {
+                <p>{{ flight.name }} {{ flight.startLocation }}</p>
+            }
+        }
+    </div>
+</div>
