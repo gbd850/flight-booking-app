@@ -21,9 +21,9 @@ export class AppComponent implements OnInit {
   constructor(private flightService: FlightService) {}
 
   ngOnInit(): void {
-    this.flightService.getFlightsByStartLocation('City1').subscribe({
-      next: (response: Flight[]) => (this.flights = response),
-      error: (error: HttpErrorResponse) => alert(error.message),
-    });
+    // this.flightService.getFlightsByStartLocation('City1').subscribe({
+    //   next: (response: Flight[]) => (this.flights = response),
+    //   error: (error: HttpErrorResponse) => alert(error.message),
+    // });
   }
 }
