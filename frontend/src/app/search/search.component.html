@@ -1,15 +1,21 @@
-<div class="h-full container mx-auto flex">
+<div class="h-full container mx-auto flex flex-col items-center">
+  <div class="p-5">
+    <p class="text-2xl">Results</p>
+  </div>
+  <div class="space-y-5">
+    @if (failed) {
     <div>
-        <p>Flights List</p>
+      <p class="text-xl text-red-500">Failed data loading</p>
     </div>
-    <div>
-        @if (failed) {
-            <p>Failed data loading</p>
-        }
-        @else {
-            @for (flight of flights; track $index) {
-                <p>{{ flight.name }} {{ flight.startLocation }}</p>
-            }
-        }
+    } @else { @for (flight of flights; track $index) {
+    <div class="p-3 bg-blue-200 rounded-xl grid grid-cols-3 gap-3">
+      <p>{{ flight.name }}</p>
+      <p>{{ flight.startLocation }}</p>
+      <p>{{ flight.endLocation }}</p>
+      <p>{{ flight.startDate | date:'medium' }}</p>
+      <p>{{ flight.endDate | date:'medium' }}</p>
+      <p>${{ flight.price }}</p>
     </div>
+    } }
+  </div>
 </div>
