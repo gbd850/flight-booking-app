@@ -1,1 +1,43 @@
-<p>header works!</p>
+<header>
+    <!-- Navigation bar -->
+    <nav
+      class="relative flex w-full items-center justify-between bg-white py-2 px-5 shadow-dark-mild lg:flex-wrap lg:justify-start lg:py-4"
+      data-twe-navbar-ref>
+      <div class="flex w-full flex-wrap items-center justify-between px-3">
+        <!-- Logo -->
+        <div class="text-2xl">
+            <p>✈️ flight-booking-app</p>
+        </div>
+        <!-- Login links -->
+        <div
+          class="flex flex-row text-lg"
+          id="navbarSupportedContentY"
+          data-twe-collapse-item>
+          <ul
+            class="me-auto flex flex-col lg:flex-row space-x-5 justify-items-center items-center"
+            data-twe-navbar-nav-ref>
+            <li class="mb-4 lg:mb-0 lg:pe-2" data-twe-nav-item-ref>
+              <a
+                class="block text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none"
+                href=""
+                data-twe-nav-link-ref
+                data-twe-ripple-init
+                data-twe-ripple-color="light"
+                >Log in</a
+              >
+            </li>
+            <li class="mb-4 lg:mb-0 px-3 py-2 rounded bg-blue-500 transition duration-200 hover:bg-blue-400 hover:ease-in-out focus:bg-blue-400 active:bg-blue-400 pointer-events-none" data-twe-nav-item-ref>
+                <a
+                  class="block text-white motion-reduce:transition-none pointer-events-auto"
+                  href=""
+                  data-twe-nav-link-ref
+                  data-twe-ripple-init
+                  data-twe-ripple-color="light"
+                  >Sign up</a
+                >
+              </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
