@@ -11,8 +11,6 @@ export class FlightService {
 
   private apiUrl = "http://localhost:8080/api";
 
-  private searchData: FlightRequest = {};
-
   constructor(private http: HttpClient) { }
 
   getFlightsByStartLocation(startLocation: string, isFiltered: boolean = false) : Observable<Flight[]> {
@@ -34,16 +32,5 @@ export class FlightService {
       return of([]);
     }
     return this.http.get<Flight[]>(`${this.apiUrl}/flight?startDate=${startDate}&endDate=${endDate}&filterUnavailable=${isFiltered}`);
-  }
-
-  setSearchData(searchData: FlightRequest) : void {
-    this.searchData = searchData;
-  }
-
-  getSearchData() : FlightRequest|undefined {
-    if (JSON.stringify(this.searchData) === '{}') {
-      return undefined;
-    }
-    return this.searchData;
   }
 }

@@ -6,7 +6,9 @@
       <div class="flex w-full flex-wrap items-center justify-between px-3">
         <!-- Logo -->
         <div class="text-2xl">
-            <p>✈️ flight-booking-app</p>
+            <a
+            [routerLink]="['/']"
+            >✈️ flight-booking-app</a>
         </div>
         <!-- Login links -->
         <div
@@ -19,7 +21,7 @@
             <li class="mb-4 lg:mb-0 lg:pe-2" data-twe-nav-item-ref>
               <a
                 class="block text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none"
-                href=""
+                [routerLink] = "['/login']"
                 data-twe-nav-link-ref
                 data-twe-ripple-init
                 data-twe-ripple-color="light"
@@ -29,7 +31,7 @@
             <li class="mb-4 lg:mb-0 px-3 py-2 rounded bg-blue-500 transition duration-200 hover:bg-blue-400 hover:ease-in-out focus:bg-blue-400 active:bg-blue-400 pointer-events-none" data-twe-nav-item-ref>
                 <a
                   class="block text-white motion-reduce:transition-none pointer-events-auto"
-                  href=""
+                  [routerLink] = "['/login']"
                   data-twe-nav-link-ref
                   data-twe-ripple-init
                   data-twe-ripple-color="light"

@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FlightService } from '../service/flight.service';
 import { Router } from '@angular/router';
-import { FlightRequest } from '../dto/flightRequest';
 
 @Component({
   selector: 'app-home',
