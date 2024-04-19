@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FlightService } from '../service/flight.service';
@@ -20,15 +20,17 @@ export class HomeComponent {
     private router: Router
   ) {}
 
+  currentDate = formatDate(new Date, 'yyyy-MM-dd', 'en');
+
   searchForm = this.formBuilder.group({
-    startDate: '',
-    endDate: '',
+    startDate: this.currentDate,
+    endDate: this.currentDate,
     startLocation: '',
-    endLocation: ''
+    endLocation: '',
+    filterUnavailable: false
   });
 
   onSubmit(): void {
-    this.fligtService.setSearchData(this.searchForm.value as FlightRequest);
-    this.router.navigate(['/search']);
+    this.router.navigate(['/search'], {queryParams: this.searchForm.value});
   }
 }

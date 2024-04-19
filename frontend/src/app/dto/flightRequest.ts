@@ -1,6 +1,7 @@
 export interface FlightRequest {
-    startDate?: Date|string;
-    endDate?: Date|string;
+    startDate?: Date;
+    endDate?: Date;
     startLocation?: string;
     endLocation?: string;
+    filterUnavailable?: boolean;
 }
