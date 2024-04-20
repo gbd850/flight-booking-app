@@ -2,6 +2,7 @@ package dev.peter.flightbooking.service;
 
 import dev.peter.flightbooking.dto.CustomerRequestDto;
 import dev.peter.flightbooking.dto.CustomerResponseDto;
+import dev.peter.flightbooking.dto.CustomerRoleResponseDto;
 import dev.peter.flightbooking.model.Customer;
 import dev.peter.flightbooking.model.Role;
 import dev.peter.flightbooking.repository.CustomerRepository;
@@ -107,4 +108,10 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist"));
     }
 
+    public CustomerRoleResponseDto getCustomerRole(String username) {
+        String role = customerRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with username " + username + " does not exist")))
+                .getRole().name();
+        return new CustomerRoleResponseDto(role);
+    }
 }
