@@ -16,12 +16,19 @@ $ mvnw spring-boot:run
 $ cd authserver
 
 $ mvnw spring-boot:run
+
+$ cd ../frontend
+
+$ ng serve
 ```
 The main application runs on `localhost:8080` while the authentication server runs on port `8081`
 
 ## Specification
 
 ### Tech Stack
+
+#### Backend
+
 * Java 21
 * Spring Boot 3
 * Spring Data
@@ -40,3 +47,10 @@ The main application runs on `localhost:8080` while the authentication server ru
 * Hamcrest
 * Wavefront
 * Resilience4j
+
+#### Frontend
+
+* TypeScript
+* Angular 17
+* RxJS
+* TailwindCSS
