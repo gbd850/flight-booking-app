@@ -2,8 +2,10 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Customer } from '../model/customer';
 import { Role } from '../dto/RoleDto';
-import { lastValueFrom, of } from 'rxjs';
+import { Observable, lastValueFrom, of } from 'rxjs';
 import { TokenResponse } from '../dto/TokenResponse';
+import { CustomerResponse } from '../dto/CustomerResponse';
+import { CustomerRequest } from '../dto/customerRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -39,5 +41,10 @@ async getCustomerRole(login: string) : Promise<string> {
         .set('Authorization', "Basic " + btoa(`${login}:${password}`)),
     };
     return this.http.post<TokenResponse>(this.oauthUrl, body.toString(), options);
+  }
+
+  createAccount(login: string, password: string) : Observable<CustomerResponse> {
+    const body = { username: login, password: password } as CustomerRequest;
+    return this.http.post(`${this.apiUrl}/customer`, body);
   }
 }
