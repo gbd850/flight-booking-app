@@ -42,15 +42,15 @@ public class CustomerService {
     }
 
     @Transactional
-    @PreAuthorize("hasAuthority('SCOPE_user.write')")
+//    @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto) {
 
         Role role;
         try {
             role = Role.valueOf(customerRequestDto.role());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             role = Role.USER;
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         String password = passwordEncoder.encode(customerRequestDto.password());
