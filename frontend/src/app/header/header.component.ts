@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject } from 'rxjs';
+import { LoginService } from '../service/login.service';
+
 
 @Component({
   selector: 'app-header',
@@ -11,16 +13,16 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent implements OnInit {
-  constructor(private cookieService: CookieService) {}
+export class HeaderComponent {
+
+  constructor(private cookieService: CookieService, private loginService: LoginService) {
+    loginService.isLoggedIn().subscribe((value : boolean) => {
+      this.isLoggedIn$.next(value);
+      this.user = value ? loginService.getUsername()! : '';
+    });
+  }
 
   isLoggedIn$ = new BehaviorSubject(false);
 
-  ngOnInit(): void {
-    if (this.cookieService.check('token')) {
-      this.isLoggedIn$.next(true);
-    } else {
-      this.isLoggedIn$.next(false);
-    }
-  }
+  user: string = '';
 }

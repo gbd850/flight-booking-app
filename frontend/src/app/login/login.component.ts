@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TokenResponse } from '../dto/TokenResponse';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, of } from 'rxjs';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private customerService: CustomerService,
     private router: Router,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private loginService: LoginService
   ) {}
 
   loginForm = this.formBuilder.group({
@@ -40,6 +42,7 @@ export class LoginComponent implements OnInit {
     this.error$.next(false);
     this.cookieService.set('token', token.access_token, token.expires_in);
     this.cookieService.set('scope', token.scope, token.expires_in);
+    this.loginService.isLoggedIn();
     this.router.navigate(['/']);
   }
 
