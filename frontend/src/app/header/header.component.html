@@ -18,6 +18,7 @@
           <ul
             class="me-auto flex flex-col lg:flex-row space-x-5 justify-items-center items-center"
             data-twe-navbar-nav-ref>
+            @if (!(isLoggedIn$ | async)) {
             <li class="mb-4 lg:mb-0 lg:pe-2" data-twe-nav-item-ref>
               <a
                 class="block text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none"
@@ -38,6 +39,19 @@
                   >Sign up</a
                 >
               </li>
+            }
+            @else {
+              <li class="mb-4 lg:mb-0 lg:pe-2" data-twe-nav-item-ref>
+                <a
+                  class="block text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none"
+                  [routerLink] = "['/logout']"
+                  data-twe-nav-link-ref
+                  data-twe-ripple-init
+                  data-twe-ripple-color="light"
+                  >Log out</a
+                >
+              </li>
+            }
           </ul>
         </div>
       </div>
