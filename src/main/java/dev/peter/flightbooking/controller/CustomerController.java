@@ -2,6 +2,7 @@ package dev.peter.flightbooking.controller;
 
 import dev.peter.flightbooking.dto.CustomerRequestDto;
 import dev.peter.flightbooking.dto.CustomerResponseDto;
+import dev.peter.flightbooking.dto.CustomerRoleResponseDto;
 import dev.peter.flightbooking.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,10 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("role/{username}")
+    public ResponseEntity<CustomerRoleResponseDto> getCustomerRole(@PathVariable String username) {
+        return new ResponseEntity<>(customerService.getCustomerRole(username), HttpStatus.OK);
     }
 }

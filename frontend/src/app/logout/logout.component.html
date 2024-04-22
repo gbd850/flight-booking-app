@@ -1,0 +1,4 @@
+<div class="container mx-auto">
+    <span *ngIf="isLoggedIn$ | async" class="text-2xl">You have been successfully logged out!</span>
+    <span *ngIf="!(isLoggedIn$ | async)" class="text-2xl text-red-500">Oops! Something went wrong!</span>    
+</div>
