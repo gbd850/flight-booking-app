@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import static java.util.Objects.isNull;
 
@@ -120,8 +119,9 @@ public class CustomerService {
 
     @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public CustomerBookingResponseDto getCustomerBookings(Integer id) {
-        customerRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
+        if (!customerRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist"));
+        }
 
         return new CustomerBookingResponseDto(customerRepository.findBookedFlightsByCustomerId(id));
     }
@@ -133,7 +133,7 @@ public class CustomerService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
 
         Flight flight = flightRepository.findById(bookingRequest.flightId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flights not found", new Throwable("Could not find flights with id " + id)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flights not found", new Throwable("Could not find flights with id " + id)));
 
         customer.getBookedFlights().add(flight);
 

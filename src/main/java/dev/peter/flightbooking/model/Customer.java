@@ -32,7 +32,7 @@ public class Customer {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "customers_flights",
             joinColumns = @JoinColumn(name = "flight_id"),
