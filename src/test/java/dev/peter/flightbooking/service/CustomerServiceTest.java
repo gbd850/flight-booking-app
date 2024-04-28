@@ -1,8 +1,8 @@
 package dev.peter.flightbooking.service;
 
-import dev.peter.flightbooking.dto.CustomerRequestDto;
-import dev.peter.flightbooking.dto.CustomerResponseDto;
+import dev.peter.flightbooking.dto.*;
 import dev.peter.flightbooking.model.Customer;
+import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.model.Role;
 import dev.peter.flightbooking.repository.CustomerRepository;
 import dev.peter.flightbooking.repository.FlightRepository;
@@ -17,12 +17,13 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -182,5 +183,189 @@ class CustomerServiceTest {
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Customer not found")
                 .hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void givenValidUsername_whenGetCustomerRole_thenReturnRoleDto() {
+        // given
+        String username = "username";
+
+        Customer customer = new Customer(null, username, "", Role.USER, new HashSet<>());
+
+        given(customerRepository.findByUsername(username)).willReturn(Optional.of(customer));
+
+        // when
+        CustomerRoleResponseDto roleDto = customerService.getCustomerRole(username);
+
+        // then
+        assertThat(roleDto)
+                .hasFieldOrPropertyWithValue("role", customer.getRole().name());
+    }
+
+    @Test
+    void givenInvalidUsername_whenGetCustomerRole_thenThrowException() {
+        // given
+        String username = "username";
+
+        given(customerRepository.findByUsername(username)).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.getCustomerRole(username))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Customer not found");
+    }
+
+    @Test
+    void givenValidId_whenGetCustomerBookings_thenReturnBookingDto() {
+        // given
+        Flight flight = new Flight(1, "flight1", 10.5, Timestamp.valueOf("2010-10-10 00:00:00"), null, "start", null, true);
+
+        given(customerRepository.existsById(anyInt())).willReturn(true);
+        given(customerRepository.findBookedFlightsByCustomerId(anyInt())).willReturn(Set.of(flight));
+
+        // when
+        CustomerBookingResponseDto bookingDto = customerService.getCustomerBookings(anyInt());
+
+        // then
+        assertThat(bookingDto).hasFieldOrPropertyWithValue("bookedFlights", Set.of(flight));
+    }
+
+    @Test
+    void givenInvalidId_whenGetCustomerBookings_thenThrowException() {
+        // given
+        given(customerRepository.existsById(anyInt())).willReturn(false);
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.getCustomerBookings(anyInt()))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Customer not found");
+    }
+
+    @Test
+    void givenValidIdAndFlightId_whenBookCustomerFlight_thenReturnBookingDtoAndShouldUpdateBookedFlights() {
+        // given
+        Flight flight = new Flight(1, "flight1", 10.5, Timestamp.valueOf("2010-10-10 00:00:00"), null, "start", null, true);
+        Customer customer = new Customer(1 , "username", "", Role.USER, new HashSet<>(Set.of(flight)));
+        CustomerBookingRequestDto bookingRequest = new CustomerBookingRequestDto(flight.getId());
+
+        given(customerRepository.findById(1)).willReturn(Optional.of(customer));
+        given(flightRepository.findById(1)).willReturn(Optional.of(flight));
+
+        // when
+        CustomerBookingResponseDto bookingDto = customerService.bookCustomerFlight(1, bookingRequest);
+        // then
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).save(customerArgumentCaptor.capture());
+
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+
+        assertThat(capturedCustomer).hasFieldOrPropertyWithValue("bookedFlights", Set.of(flight));
+        assertThat(bookingDto).hasFieldOrPropertyWithValue("bookedFlights", Set.of(flight));
+    }
+
+    @Test
+    void givenInvalidIdAndFlightId_whenBookCustomerFlight_thenThrowException() {
+        // given
+        CustomerBookingRequestDto bookingRequest = new CustomerBookingRequestDto(1);
+
+        given(customerRepository.findById(anyInt())).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.bookCustomerFlight(anyInt(), bookingRequest))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Customer not found");
+    }
+
+    @Test
+    void givenValidIdAndInvalidFlightId_whenBookCustomerFlight_thenThrowException() {
+        // given
+        Customer customer = new Customer(1 , "username", "", Role.USER, new HashSet<>(Set.of()));
+        CustomerBookingRequestDto bookingRequest = new CustomerBookingRequestDto(1);
+
+        given(customerRepository.findById(anyInt())).willReturn(Optional.of(customer));
+        given(flightRepository.findById(anyInt())).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.bookCustomerFlight(anyInt(), bookingRequest))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Flights not found");
+    }
+
+    @Test
+    void givenInvalidIdAndInvalidFlightId_whenBookCustomerFlight_thenThrowException() {
+        // given
+        CustomerBookingRequestDto bookingRequest = new CustomerBookingRequestDto(1);
+
+        given(customerRepository.findById(anyInt())).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.bookCustomerFlight(anyInt(), bookingRequest))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Customer not found");
+    }
+
+    @Test
+    void givenValidIdAndFlightId_whenDeleteBookedCustomerFlight_thenRemoveFromFlightsSet() {
+        // given
+        Flight flight = new Flight(1, "flight1", 10.5, Timestamp.valueOf("2010-10-10 00:00:00"), null, "start", null, true);
+        Customer customer = new Customer(1 , "username", "", Role.USER, new HashSet<>(Set.of(flight)));
+
+        given(customerRepository.findById(anyInt())).willReturn(Optional.of(customer));
+        given(flightRepository.findById(anyInt())).willReturn(Optional.of(flight));
+
+        // when
+        customerService.deleteBookedCustomerFlight(1, 1);
+
+        // then
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).save(customerArgumentCaptor.capture());
+
+        Customer capturedCustomer = customerArgumentCaptor.getValue();
+
+        assertThat(capturedCustomer.getBookedFlights()).doesNotContain(flight);
+    }
+
+    @Test
+    void givenInvalidIdAndFlightId_whenDeleteBookedCustomerFlight_thenThrowException() {
+        // given
+        given(customerRepository.findById(anyInt())).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.deleteBookedCustomerFlight(1, 1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Customer not found");
+    }
+
+    @Test
+    void givenValidIdAndInvalidFlightId_whenDeleteBookedCustomerFlight_thenThrowException() {
+        // given
+        Customer customer = new Customer(1 , "username", "", Role.USER, new HashSet<>(Set.of()));
+
+        given(customerRepository.findById(anyInt())).willReturn(Optional.of(customer));
+        given(flightRepository.findById(anyInt())).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.deleteBookedCustomerFlight(1, 1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Flights not found");
+    }
+
+    @Test
+    void givenInvalidIdAndInvalidFlightId_whenDeleteBookedCustomerFlight_thenThrowException() {
+        // given
+        given(customerRepository.findById(anyInt())).willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> customerService.deleteBookedCustomerFlight(1, 1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Customer not found");
     }
 }
