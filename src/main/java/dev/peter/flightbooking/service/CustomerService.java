@@ -120,9 +120,13 @@ public class CustomerService {
 
     @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public CustomerBookingResponseDto getCustomerBookings(Integer id) {
+        customerRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
+
         return new CustomerBookingResponseDto(customerRepository.findBookedFlightsByCustomerId(id));
     }
 
+    @Transactional
     @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public CustomerBookingResponseDto bookCustomerFlight(Integer id, CustomerBookingRequestDto bookingRequest) {
         Customer customer = customerRepository.findById(id)
@@ -138,6 +142,7 @@ public class CustomerService {
         return new CustomerBookingResponseDto(customer.getBookedFlights());
     }
 
+    @Transactional
     @PreAuthorize("hasAuthority('SCOPE_user.write')")
     public void deleteBookedCustomerFlight(Integer id, Integer flightId) {
         Customer customer = customerRepository.findById(id)

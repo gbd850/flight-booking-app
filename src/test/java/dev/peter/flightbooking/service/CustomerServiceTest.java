@@ -5,6 +5,7 @@ import dev.peter.flightbooking.dto.CustomerResponseDto;
 import dev.peter.flightbooking.model.Customer;
 import dev.peter.flightbooking.model.Role;
 import dev.peter.flightbooking.repository.CustomerRepository;
+import dev.peter.flightbooking.repository.FlightRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,12 +35,15 @@ class CustomerServiceTest {
     @Mock
     private CustomerRepository customerRepository;
 
+    @Mock
+    private FlightRepository flightRepository;
+
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         passwordEncoder = NoOpPasswordEncoder.getInstance(); //dummy password encoder
-        customerService = new CustomerService(customerRepository, passwordEncoder);
+        customerService = new CustomerService(customerRepository, flightRepository, passwordEncoder);
     }
 
     @Test
