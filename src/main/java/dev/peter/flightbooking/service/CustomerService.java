@@ -1,11 +1,11 @@
 package dev.peter.flightbooking.service;
 
-import dev.peter.flightbooking.dto.CustomerRequestDto;
-import dev.peter.flightbooking.dto.CustomerResponseDto;
-import dev.peter.flightbooking.dto.CustomerRoleResponseDto;
+import dev.peter.flightbooking.dto.*;
 import dev.peter.flightbooking.model.Customer;
+import dev.peter.flightbooking.model.Flight;
 import dev.peter.flightbooking.model.Role;
 import dev.peter.flightbooking.repository.CustomerRepository;
+import dev.peter.flightbooking.repository.FlightRepository;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 
@@ -25,6 +26,8 @@ import static java.util.Objects.isNull;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+
+    private final FlightRepository flightRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -113,5 +116,38 @@ public class CustomerService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with username " + username + " does not exist")))
                 .getRole().name();
         return new CustomerRoleResponseDto(role);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_user.read')")
+    public CustomerBookingResponseDto getCustomerBookings(Integer id) {
+        return new CustomerBookingResponseDto(customerRepository.findBookedFlightsByCustomerId(id));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
+    public CustomerBookingResponseDto bookCustomerFlight(Integer id, CustomerBookingRequestDto bookingRequest) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
+
+        Flight flight = flightRepository.findById(bookingRequest.flightId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flights not found", new Throwable("Could not find flights with id " + id)));
+
+        customer.getBookedFlights().add(flight);
+
+        customerRepository.save(customer);
+
+        return new CustomerBookingResponseDto(customer.getBookedFlights());
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_user.write')")
+    public void deleteBookedCustomerFlight(Integer id, Integer flightId) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found", new Throwable("Customer with id " + id + " does not exist")));
+
+        Flight flight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flights not found", new Throwable("Could not find flights with id " + id)));
+
+        customer.getBookedFlights().remove(flight);
+
+        customerRepository.save(customer);
     }
 }
