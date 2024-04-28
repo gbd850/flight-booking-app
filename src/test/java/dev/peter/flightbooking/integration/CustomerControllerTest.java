@@ -81,7 +81,7 @@ class CustomerControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/customer/" + id)
+                .get("/v1/api/customers/" + id)
 
                 // then
                 .then()
@@ -98,7 +98,7 @@ class CustomerControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/customer/" + id)
+                .get("/v1/api/customers/" + id)
 
                 // then
                 .then()
@@ -118,7 +118,7 @@ class CustomerControllerTest {
                 .with()
                 .body(customerRequestDto)
                 .when()
-                .post("/api/customer")
+                .post("/v1/api/customers")
 
                 // then
                 .then()
@@ -132,7 +132,7 @@ class CustomerControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/api/customer")
+                .post("/v1/api/customers")
 
                 // then
                 .then()
@@ -155,7 +155,7 @@ class CustomerControllerTest {
                 .with()
                 .body(customerRequestDto)
                 .when()
-                .patch("/api/customer/" + id)
+                .patch("/v1/api/customers/" + id)
 
                 // then
                 .then()
@@ -178,7 +178,7 @@ class CustomerControllerTest {
                 .with()
                 .body(customerRequestDto)
                 .when()
-                .patch("/api/customer/" + id)
+                .patch("/v1/api/customers/" + id)
 
                 // then
                 .then()
@@ -200,7 +200,7 @@ class CustomerControllerTest {
                 .contentType(ContentType.JSON)
                 .with()
                 .when()
-                .patch("/api/customer/" + id)
+                .patch("/v1/api/customers/" + id)
 
                 // then
                 .then()
@@ -219,7 +219,7 @@ class CustomerControllerTest {
                 .contentType(ContentType.JSON)
                 .with()
                 .when()
-                .patch("/api/customer/" + id)
+                .patch("/v1/api/customers/" + id)
 
                 // then
                 .then()
@@ -239,7 +239,7 @@ class CustomerControllerTest {
                 .contentType(ContentType.JSON)
                 .with()
                 .when()
-                .delete("/api/customer/" + id)
+                .delete("/v1/api/customers/" + id)
 
                 // then
                 .then()
@@ -256,7 +256,7 @@ class CustomerControllerTest {
                 .contentType(ContentType.JSON)
                 .with()
                 .when()
-                .delete("/api/customer/" + id)
+                .delete("/v1/api/customers/" + id)
 
                 // then
                 .then()

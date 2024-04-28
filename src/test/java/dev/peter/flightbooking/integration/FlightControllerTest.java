@@ -101,7 +101,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startLocation=" + startLocation)
+                .get("/v1/api/flights?startLocation=" + startLocation)
 
                 // then
                 .then()
@@ -126,7 +126,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startLocation=" + startLocation + "&filterUnavailable=true")
+                .get("/v1/api/flights?startLocation=" + startLocation + "&filterUnavailable=true")
 
                 // then
                 .then()
@@ -145,7 +145,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startLocation=" + startLocation)
+                .get("/v1/api/flights?startLocation=" + startLocation)
 
                 // then
                 .then()
@@ -170,7 +170,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?endLocation=" + endLocation)
+                .get("/v1/api/flights?endLocation=" + endLocation)
 
                 // then
                 .then()
@@ -195,7 +195,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?endLocation=" + endLocation + "&filterUnavailable=true")
+                .get("/v1/api/flights?endLocation=" + endLocation + "&filterUnavailable=true")
 
                 // then
                 .then()
@@ -214,7 +214,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?endLocation=" + endLocation)
+                .get("/v1/api/flights?endLocation=" + endLocation)
 
                 // then
                 .then()
@@ -244,7 +244,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startDate=" + startDate + "&endDate=" + endDate)
+                .get("/v1/api/flights?startDate=" + startDate + "&endDate=" + endDate)
 
                 // then
                 .then()
@@ -280,7 +280,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startDate=" + startDate + "&endDate=" + endDate + "&filterUnavailable=true")
+                .get("/v1/api/flights?startDate=" + startDate + "&endDate=" + endDate + "&filterUnavailable=true")
 
                 // then
                 .then()
@@ -319,7 +319,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startDate=" + invalidStartDate + "&endDate=" + endDate)
+                .get("/v1/api/flights?startDate=" + invalidStartDate + "&endDate=" + endDate)
 
                 // then
                 .then()
@@ -351,7 +351,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startDate=" + startDate + "&endDate=" + invalidEndDate)
+                .get("/v1/api/flights?startDate=" + startDate + "&endDate=" + invalidEndDate)
 
                 // then
                 .then()
@@ -384,7 +384,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/flight?startDate=" + invalidStartDate + "&endDate=" + invalidEndDate)
+                .get("/v1/api/flights?startDate=" + invalidStartDate + "&endDate=" + invalidEndDate)
 
                 // then
                 .then()
@@ -404,7 +404,7 @@ class FlightControllerTest {
                 .with()
                 .body(flightRequestDto)
                 .when()
-                .post("/api/flight")
+                .post("/v1/api/flights")
 
                 // then
                 .then()
@@ -418,7 +418,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/api/flight")
+                .post("/v1/api/flights")
 
                 // then
                 .then()
@@ -438,7 +438,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("/api/flight/" + id)
+                .delete("/v1/api/flights/" + id)
 
                 // then
                 .then()
@@ -454,7 +454,7 @@ class FlightControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("/api/flight/" + id)
+                .delete("/v1/api/flights/" + id)
 
                 // then
                 .then()
