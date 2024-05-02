@@ -11,7 +11,7 @@ import { CustomerRequest } from '../dto/customerRequest';
   providedIn: 'root',
 })
 export class CustomerService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = 'http://localhost:8080/v1/api';
   private oauthUrl = 'http://localhost:8081/oauth2/token';
 
   constructor(private http: HttpClient) {}
@@ -46,5 +46,8 @@ async getCustomerRole(login: string) : Promise<string> {
   createAccount(login: string, password: string) : Observable<CustomerResponse> {
     const body = { username: login, password: password } as CustomerRequest;
     return this.http.post(`${this.apiUrl}/customer`, body);
+  }
+
+  removeBooking(flightId: number) {
   }
 }
