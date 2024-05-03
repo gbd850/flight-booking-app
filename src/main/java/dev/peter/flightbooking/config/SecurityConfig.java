@@ -23,6 +23,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/v1/api/customers/role/**")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/api/flights")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
