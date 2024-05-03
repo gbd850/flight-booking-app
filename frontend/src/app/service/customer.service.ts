@@ -59,7 +59,6 @@ async getCustomerRole(login: string) : Promise<string> {
 
     let options = {
       headers: headers
-        .set('Content-Type', 'application/x-www-form-urlencoded')
         .set('Authorization', `Bearer ${token}`),
     };
 
@@ -67,11 +66,31 @@ async getCustomerRole(login: string) : Promise<string> {
   }
 
   removeBooking(flightId: number) {
-    console.log(this.loginService.getUserId());
+    const userId = this.loginService.getUserId();
+    const token = this.loginService.getToken();
+
+    let headers = new HttpHeaders();
+
+    let options = {
+      headers: headers
+        .set('Authorization', `Bearer ${token}`),
+    };
+
+    return this.http.delete<void>(`${this.apiUrl}/customers/${+userId!}/bookings/${flightId}`, options);
   }
 
   addBooking(flightId: number) {
-console.log('aa');
+    const userId = this.loginService.getUserId();
+    const token = this.loginService.getToken();
 
+    let headers = new HttpHeaders();
+
+    let options = {
+      headers: headers
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${token}`),
+    };
+
+    return this.http.post<CustomerBookedFlightsResponse>(`${this.apiUrl}/customers/${+userId!}/bookings`, {flightId: flightId}, options);
   }
 }

@@ -22,11 +22,11 @@ export class BookingComponent implements OnInit {
     private router: Router,
   ){}
 
-  customerBookings : Flight[] = []
+  customerBookings : Flight[] | undefined = undefined
   failed = false
 
   ngOnInit(): void {
-    
+
     if (!this.cookieService.check('token')) {
       this.router.navigate(['/']);
       alert('You are not logged in!');
@@ -40,11 +40,8 @@ export class BookingComponent implements OnInit {
   }
 
   removeBooking(id: number): void {
-    this.customerService.removeBooking(id);
-  }
-
-  addBooking(id: number) : void {
-    this.customerService.addBooking(id);
+    this.customerBookings = undefined
+    this.customerService.removeBooking(id).subscribe(() => this.ngOnInit());
   }
 
 }

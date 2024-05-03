@@ -18,8 +18,8 @@
       </div>
       <div class="flex flex-col justify-between items-center">
         <p class="text-lg font-medium">{{ flight.price | currency }}</p>
-        <a class="bg-blue-500 rounded-xl p-5 text-white font-light"
-          >View details</a
+        <a class="bg-blue-500 rounded-xl p-5 text-white font-light hover:bg-blue-400" (click)="addBooking(flight.id)"
+          >Book flight</a
         >
       </div>
     </div>
