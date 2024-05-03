@@ -1,8 +1,6 @@
 package dev.peter.flightbooking.controller;
 
-import dev.peter.flightbooking.dto.CustomerRequestDto;
-import dev.peter.flightbooking.dto.CustomerResponseDto;
-import dev.peter.flightbooking.dto.CustomerRoleResponseDto;
+import dev.peter.flightbooking.dto.*;
 import dev.peter.flightbooking.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,5 +38,21 @@ public class CustomerController {
     @GetMapping("role/{username}")
     public ResponseEntity<CustomerRoleResponseDto> getCustomerRole(@PathVariable String username) {
         return new ResponseEntity<>(customerService.getCustomerRole(username), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/bookings")
+    public ResponseEntity<CustomerBookingResponseDto> getCustomerBookings(@PathVariable Integer id) {
+        return new ResponseEntity<>(customerService.getCustomerBookings(id), HttpStatus.OK);
+    }
+
+    @PostMapping("{id}/bookings")
+    public ResponseEntity<CustomerBookingResponseDto> bookCustomerFlight(@PathVariable Integer id, @RequestBody CustomerBookingRequestDto bookingRequest) {
+        return new ResponseEntity<>(customerService.bookCustomerFlight(id, bookingRequest), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("{id}/bookings/{flightId}")
+    public ResponseEntity<Void> deleteBookedCustomerFlight(@PathVariable Integer id, @PathVariable Integer flightId) {
+        customerService.deleteBookedCustomerFlight(id, flightId);
+        return ResponseEntity.ok().build();
     }
 }

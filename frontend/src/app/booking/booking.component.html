@@ -1,13 +1,17 @@
 <div class="h-full container mx-auto flex flex-col items-center">
   <div class="p-5">
-    <p class="text-2xl">Results</p>
+    <p class="text-2xl">Profile</p>
   </div>
   <div class="space-y-5">
     @if (failed) {
     <div>
       <p class="text-xl text-red-500">Failed data loading</p>
     </div>
-    } @else { @for (flight of flights; track $index) {
+    } @else if (customerBookings!.length == 0) {
+    <div>
+      <p class="text-xl text-stone-500">You don't have any booked flights yet!</p>
+    </div>
+    } @else { @for (flight of customerBookings; track $index) {
     <div class="p-5 bg-stone-200 rounded-xl grid grid-cols-2 gap-3">
       <div class="flex flex-col">
         <p class="font-bold col-span-2">{{ flight.name }}</p>
@@ -18,8 +22,10 @@
       </div>
       <div class="flex flex-col justify-between items-center">
         <p class="text-lg font-medium">{{ flight.price | currency }}</p>
-        <a class="bg-blue-500 rounded-xl p-5 text-white font-light hover:bg-blue-400" (click)="addBooking(flight.id)"
-          >Book flight</a
+        <a
+          class="bg-red-500 rounded-xl p-5 text-white font-light hover:bg-red-400"
+          (click)="removeBooking(flight.id)"
+          >Delete</a
         >
       </div>
     </div>

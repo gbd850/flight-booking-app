@@ -52,7 +52,7 @@ public class FlightService {
         return flights;
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_user.read')")
+//    @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public List<FlightResponseDto> getFLightsByStartLocation(String startLocation, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByStartLocation(startLocation);
@@ -92,7 +92,7 @@ public class FlightService {
         return flights;
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_user.read')")
+//    @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public List<FlightResponseDto> getFLightsByEndLocation(String endLocation, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByEndLocation(endLocation);
@@ -133,7 +133,7 @@ public class FlightService {
     }
 
     //    @Cacheable(value = "flightTimeFrame", key = "{T(java.time.LocalDate).parse(#startDate), T(java.time.LocalDate).parse(#endDate)}")
-    @PreAuthorize("hasAuthority('SCOPE_user.read')")
+//    @PreAuthorize("hasAuthority('SCOPE_user.read')")
     public List<FlightResponseDto> getFLightsByTimeFrame(String startDate, String endDate, boolean filterUnavailable) {
 
         List<Flight> flights = getAllFLightsByTimeFrame(startDate, endDate);

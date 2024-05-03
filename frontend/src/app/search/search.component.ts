@@ -5,6 +5,7 @@ import { Flight } from '../model/flight';
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { FlightRequest } from '../dto/flightRequest';
 import { ActivatedRoute } from '@angular/router';
+import { CustomerService } from '../service/customer.service';
 
 @Component({
   selector: 'app-search',
@@ -16,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 export class SearchComponent implements OnInit {
   constructor(
     private flightService: FlightService,
+    private customerService: CustomerService,
     private route: ActivatedRoute
   ) {}
 
@@ -138,5 +140,9 @@ export class SearchComponent implements OnInit {
           error: (error: HttpErrorResponse) => (this.failed = true),
         });
     }
+  }
+
+  addBooking(flightId: number) {
+    this.customerService.addBooking(flightId).subscribe(() => alert("You have successfully booked this flight!"));
   }
 }

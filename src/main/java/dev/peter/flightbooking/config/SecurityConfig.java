@@ -19,9 +19,11 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, "/api/customer")
+                        .requestMatchers(HttpMethod.POST, "/v1/api/customers")
                         .permitAll()
-                        .requestMatchers("/api/customer/role/**")
+                        .requestMatchers("/v1/api/customers/role/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/api/flights")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
